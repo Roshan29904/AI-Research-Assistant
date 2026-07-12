@@ -23,3 +23,15 @@ planner_prompt = ChatPromptTemplate.from_messages(
     
 Planner_llm = model.with_structured_output(PlannerOutput)
 
+planner_chain = planner_prompt | Planner_llm
+
+
+
+
+def planner_node(state: ResearchState):
+    """decide the flow of the graph, whether the route should be WEB , RAG or BOTH"""
+    result = planner_chain.invoke({
+        "query": state["query"]
+    })
+    route = {"route": result.route}
+    return route
