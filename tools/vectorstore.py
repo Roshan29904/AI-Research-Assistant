@@ -48,11 +48,11 @@ def load_vector_store():
 
 
 
-def retriever(k: int=4):
+def get_retriever(k: int=4):
     """Retures a retriever for semantic search"""
     vector_store = load_vector_store()
-    retriev = vector_store.as_retriever(
+    retriever = vector_store.as_retriever(
         search_Kwargs={"K": k}
     )    
-    return retriev
+    return retriever
 
