@@ -21,9 +21,9 @@ planner_prompt = ChatPromptTemplate.from_messages(
 
 
     
-Planner_llm = model.with_structured_output(PlannerOutput)
+planner_llm = model.with_structured_output(PlannerOutput)
 
-planner_chain = planner_prompt | Planner_llm
+planner_chain = planner_prompt | planner_llm
 
 
 

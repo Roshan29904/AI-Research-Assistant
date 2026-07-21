@@ -40,5 +40,3 @@ graph.add_edge("synthesizer", "reviewer")
 graph.add_conditional_edges(
     "reviewer", review_router, {"final": END, "research_again": "planner"}
 )
-
-gra = graph.compile()

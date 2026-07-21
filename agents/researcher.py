@@ -9,14 +9,14 @@ def web_search_node(state: ResearchState):
     results = web_search(query)
     format_search_result = format_search_results(results)
     
-    return format_search_result
+    return {"web_results": format_search_result}
 
 
 
 def rag_research_node(state: ResearchState):
     query = state["query"]
     result = search_documents(query)
-    return result
+    return {"rag_results": result}
 
 
 def both_research_node(state: ResearchState):
@@ -24,9 +24,8 @@ def both_research_node(state: ResearchState):
     web_result = web_search(query)
     format_search_result = format_search_results(web_result)
     rag_result = search_documents(query)
-    return format_search_result, rag_result
+    return {"web_results": format_search_result, "rag_results": rag_result}
 
 
     
     
-

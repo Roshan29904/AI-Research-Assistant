@@ -23,4 +23,4 @@ def synthesizer_node(state: ResearchState):
         "rag_results": state["rag_results"]
     
     })
-    return draft
+    return {"draft": draft}

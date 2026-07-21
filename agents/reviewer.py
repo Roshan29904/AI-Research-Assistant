@@ -28,5 +28,8 @@ def review_node(state: ResearchState):
         "draft": state["draft"],
         
     })
-    return result
-
+    
+    return {
+        "review": result.feedback,
+        "review_passed": result.decision == "Pass",
+    }
