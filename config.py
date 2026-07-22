@@ -18,20 +18,18 @@ DOCUMENTS_PATH = os.getenv("DOCUMENTS_PATH")
 CHECKPOINT_DB = os.getenv("CHECKPOINT_DB")
 
 
-
 llm = HuggingFaceEndpoint(
-    repo_id = MODEL_ID,
-    task = "text=generation",
+    repo_id=MODEL_ID,
+    task="text-generation",
     max_new_tokens=1024,
     temperature=0.4,
     huggingfacehub_api_token=HF_TOKEN
-    
+
 )
-model = ChatHuggingFace(llm = llm)
+model = ChatHuggingFace(llm=llm)
 
 
-
-embeddings = HuggingFaceEmbeddings(model_name = EMBEDDING_MODEL)
+embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
 
 
 __all__ = [
@@ -41,4 +39,3 @@ __all__ = [
     "DOCUMENTS_PATH",
     "CHECKPOINT_DB"
 ]
-
