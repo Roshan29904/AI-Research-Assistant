@@ -1,6 +1,11 @@
 import streamlit as st
 
-from graph.graph import app
+from graph.graph import build_graph
+
+
+@st.cache_resource
+def get_research_app():
+    return build_graph()
 
 
 st.set_page_config(page_title="AI Research Assistant", page_icon="🔎", layout="wide")
@@ -23,6 +28,8 @@ def build_initial_state(query: str):
     }
 
 
+research_app = get_research_app()
+
 st.title("AI Research Assistant")
 st.caption("Search the web and local knowledge base to create a research brief.")
 
@@ -40,7 +47,7 @@ if submitted:
     else:
         with st.spinner("Researching and synthesizing the answer..."):
             state = build_initial_state(question.strip())
-            result = app.invoke(state)
+            result = research_app.invoke(state)
         st.session_state["last_result"] = result
 
 if "last_result" in st.session_state:
