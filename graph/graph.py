@@ -1,14 +1,12 @@
-from langgraph.graph import StateGraph, START, END
-
-from graph.state import ResearchState
-from graph.router import planner_route
-from graph.review_router import review_router
+from langgraph.graph import END, START, StateGraph
 
 from agents.planner import planner_node
-from agents.researcher import web_search_node, rag_research_node, both_research_node
+from agents.researcher import both_research_node, rag_research_node, web_search_node
+from agents.reviewer import review_node
 from agents.synthesizer import synthesizer_node
-from agents.reviewer import review_node 
-
+from graph.review_router import review_router
+from graph.router import planner_route
+from graph.state import ResearchState
 
 
 graph = StateGraph(ResearchState)
@@ -36,7 +34,12 @@ graph.add_edge("web_research", "synthesizer")
 graph.add_edge("rag_research", "synthesizer")
 graph.add_edge("both_research", "synthesizer")
 graph.add_edge("synthesizer", "reviewer")
-
 graph.add_conditional_edges(
-    "reviewer", review_router, {"final": END, "research_again": "planner"}
+    "reviewer",
+    review_router,
+    {"final": END, "research_again": "planner"},
 )
+
+app = graph.compile()
+
+__all__ = ["app", "graph"]

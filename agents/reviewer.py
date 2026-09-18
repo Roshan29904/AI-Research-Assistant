@@ -1,28 +1,18 @@
-from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import PydanticOutputParser
 
 from config import model
 from graph.state import ResearchState
-from prompts.reviewer import REVIEWER, HUMAN
-from typing import Literal
+from prompts.reviewer import HUMAN, REVIEWER
 
-
-class ReviewOutput(BaseModel):
-    decision: Literal["Pass", "Fail"] = Field(description="Is the report acceptable")
-    feedback: str = Field(description="Feedback for improving the report.")
-
-
-parser = PydanticOutputParser(pydantic_object=ReviewOutput)
 
 review_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", REVIEWER + "\n\n{format_instructions}"),
+        ("system", REVIEWER),
         ("human", HUMAN),
     ]
-).partial(format_instructions=parser.get_format_instructions())
+)
 
-chain = review_prompt | model | parser
+chain = review_prompt | model
 
 
 def review_node(state: ResearchState):
@@ -30,8 +20,12 @@ def review_node(state: ResearchState):
         "query": state["query"],
         "draft": state["draft"],
     })
+    feedback = str(getattr(result, "content", result)).strip()
+    decision = "Pass" if "pass" in feedback.lower() else "Fail"
+    current_revision = int(state.get("revision_number", 0))
 
     return {
-        "review": result.feedback,
-        "review_passed": result.decision == "Pass",
+        "review": feedback,
+        "review_passed": decision == "Pass",
+        "revision_number": current_revision + 1,
     }
